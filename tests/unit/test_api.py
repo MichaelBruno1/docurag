@@ -289,3 +289,18 @@ def test_query_rag_boundary_validations(mock_pipeline_dependencies):
         )
         assert response.status_code == 422
 
+
+def test_export_rag_endpoint(mock_pipeline_dependencies):
+    with TestClient(app) as client:
+        # 1. Request unauthorized (missing X-API-Key)
+        response = client.get("/documents/export")
+        assert response.status_code == 403
+
+        # 2. Request authorized (valid X-API-Key)
+        response = client.get("/documents/export", headers={"X-API-Key": API_KEY})
+        assert response.status_code == 200
+        assert response.headers["content-type"] == "application/zip"
+        assert "attachment" in response.headers["content-disposition"]
+        assert "docurag_export.zip" in response.headers["content-disposition"]
+
+

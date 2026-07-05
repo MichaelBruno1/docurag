@@ -36,6 +36,8 @@ services:
       - LLM_MODEL_NAME=${LLM_MODEL_NAME:-google/gemma-3-4b}
       - EMBEDDING_MODEL_NAME=${EMBEDDING_MODEL_NAME:-intfloat/multilingual-e5-base}
       - RERANK_MODEL_NAME=${RERANK_MODEL_NAME:-BAAI/bge-reranker-base}
+      - CHUNK_SIZE_TARGET=${CHUNK_SIZE_TARGET:-512}
+      - CHUNK_OVERLAP=${CHUNK_OVERLAP:-64}
     extra_hosts:
       # Ensures portability across OS gateways (Windows, Mac, Linux)
       - "host.docker.internal:host-gateway"
@@ -63,6 +65,8 @@ services:
       - LLM_MODEL_NAME=${LLM_MODEL_NAME:-google/gemma-3-4b}
       - EMBEDDING_MODEL_NAME=${EMBEDDING_MODEL_NAME:-intfloat/multilingual-e5-base}
       - RERANK_MODEL_NAME=${RERANK_MODEL_NAME:-BAAI/bge-reranker-base}
+      - CHUNK_SIZE_TARGET=${CHUNK_SIZE_TARGET:-512}
+      - CHUNK_OVERLAP=${CHUNK_OVERLAP:-64}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped

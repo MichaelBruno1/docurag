@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const fileInput = document.getElementById("file-input");
     const selectedFileName = document.getElementById("selected-file-name");
     const uploadBtn = document.getElementById("upload-btn");
+    const exportRagBtn = document.getElementById("export-rag-btn");
     const documentsTbody = document.getElementById("documents-tbody");
     
     // Chat Elements
@@ -500,6 +501,43 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Erro ao carregar histórico de benchmarks:", error);
         }
     }
+
+    // ----------------------------------------------------
+    // EXPORT RAG DATABASE
+    // ----------------------------------------------------
+    exportRagBtn.addEventListener("click", async () => {
+        exportRagBtn.disabled = true;
+        showToast("Criando arquivo ZIP com os dados do RAG. Por favor, aguarde...");
+        try {
+            const response = await fetch(`${API_URL}/documents/export`, {
+                headers: { "X-API-Key": API_KEY }
+            });
+            if (response.status === 403) {
+                showToast("Erro: Não autorizado para exportar os dados.", "error");
+                return;
+            }
+            if (!response.ok) {
+                throw new Error("HTTP error " + response.status);
+            }
+            
+            // Download the file stream
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.style.display = "none";
+            a.href = url;
+            a.download = "docurag_export.zip";
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            showToast("Exportação RAG baixada com sucesso!");
+        } catch (error) {
+            console.error("Erro ao exportar base RAG:", error);
+            showToast("Erro crítico ao tentar exportar base RAG.", "error");
+        } finally {
+            exportRagBtn.disabled = false;
+        }
+    });
 
     // ----------------------------------------------------
     // INITIALIZATION & TIMERS

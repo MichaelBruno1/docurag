@@ -3,12 +3,13 @@ import json
 import uuid
 import logging
 import datetime
+import zipfile
 from typing import Dict, Any, Optional, List
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Depends, HTTPException, Security, File, UploadFile, status
+from fastapi import FastAPI, Depends, HTTPException, Security, File, UploadFile, status, BackgroundTasks
 from fastapi.security.api_key import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, FileResponse
 from pydantic import BaseModel, Field
 from redis import Redis
 from rq import Queue
@@ -126,7 +127,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="DocuRAG Platform API",
     description="Plataforma de IA Generativa RAG Corporativa para Ingestão e Consulta Semântica Grounded de Documentos.",
-    version="1.2.0",
+    version="1.3.0",
     lifespan=lifespan
 )
 
@@ -242,6 +243,63 @@ async def ingest_document(
         nome_arquivo=filename,
         status="enfileirado"
     )
+
+def remove_temp_file(path: str):
+    try:
+        if os.path.exists(path):
+            os.remove(path)
+            logger.info(f"Arquivo temporário de exportação RAG removido: {path}")
+    except Exception as e:
+        logger.error(f"Erro ao remover arquivo temporário {path}: {e}")
+
+@app.get("/documents/export")
+async def export_rag_database(
+    background_tasks: BackgroundTasks,
+    api_key: str = Depends(get_api_key)
+):
+    temp_zip_path = os.path.join(settings.DATA_DIR, f"docurag_export_{uuid.uuid4().hex}.zip")
+    
+    try:
+        logger.info(f"Iniciando compilação do ZIP de exportação RAG em: {temp_zip_path}")
+        with zipfile.ZipFile(temp_zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+            # 1. Add SQLite DB
+            db_path = settings.DATABASE_PATH
+            if os.path.exists(db_path):
+                zipf.write(db_path, "docurag.db")
+                
+            # 2. Add original uploads recursively
+            uploads_dir = settings.UPLOAD_DIR
+            if os.path.exists(uploads_dir):
+                for root, dirs, files in os.walk(uploads_dir):
+                    for file in files:
+                        filepath = os.path.join(root, file)
+                        arcname = os.path.relpath(filepath, os.path.dirname(uploads_dir))
+                        zipf.write(filepath, arcname)
+                        
+            # 3. Add Qdrant vector index recursively
+            qdrant_dir = settings.QDRANT_PATH
+            if os.path.exists(qdrant_dir):
+                for root, dirs, files in os.walk(qdrant_dir):
+                    for file in files:
+                        filepath = os.path.join(root, file)
+                        arcname = os.path.relpath(filepath, os.path.dirname(qdrant_dir))
+                        zipf.write(filepath, arcname)
+                        
+        background_tasks.add_task(remove_temp_file, temp_zip_path)
+        
+        return FileResponse(
+            path=temp_zip_path,
+            filename="docurag_export.zip",
+            media_type="application/zip"
+        )
+    except Exception as e:
+        logger.exception(f"Erro crítico durante compilação do ZIP de exportação: {e}")
+        if os.path.exists(temp_zip_path):
+            try:
+                os.remove(temp_zip_path)
+            except:
+                pass
+        raise HTTPException(status_code=500, detail=f"Erro interno ao criar exportação ZIP do RAG: {str(e)}")
 
 @app.get("/documents/{document_id}")
 async def get_document_status(
