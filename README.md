@@ -1,4 +1,4 @@
-# DocuRAG Enterprise — Plataforma RAG Monolítica-Modular
+# DocuRAG — Plataforma RAG Monolítica-Modular
 
 O **DocuRAG** é uma plataforma corporativa completa de **Retrieval-Augmented Generation (RAG)** focada em processamento e indexação assíncrona de documentos de múltiplos formatos com alta fidelidade de contexto e proteção rígida contra alucinações. 
 

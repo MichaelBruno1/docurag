@@ -1,0 +1,242 @@
+[
+  {
+    "id": "q1",
+    "question": "Qual é a temperatura máxima de operação do motor A?",
+    "expected_answer": "90°C",
+    "expected_document": "manual_motor_a.pdf",
+    "expected_section": "Especificações Técnicas",
+    "is_negative": false
+  },
+  {
+    "id": "q2",
+    "question": "Como proceder em caso de vazamento de óleo do motor?",
+    "expected_answer": "Desligar imediatamente e acionar o suporte.",
+    "expected_document": "manual_motor_a.pdf",
+    "expected_section": "Segurança",
+    "is_negative": false
+  },
+  {
+    "id": "q3",
+    "question": "De quanto em quanto tempo deve ser feita a manutenção preventiva?",
+    "expected_answer": "A cada 10.000 km ou 6 meses.",
+    "expected_document": "manual_motor_a.pdf",
+    "expected_section": "Manutenção",
+    "is_negative": false
+  },
+  {
+    "id": "q4",
+    "question": "Quais dados pessoais são coletados pela política de privacidade?",
+    "expected_answer": "Nome, e-mail e endereço IP.",
+    "expected_document": "politica_privacidade.docx",
+    "expected_section": "Coleta de Dados",
+    "is_negative": false
+  },
+  {
+    "id": "q5",
+    "question": "Qual é a finalidade do tratamento de dados segundo a LGPD?",
+    "expected_answer": "Execução de contrato e legítimo interesse.",
+    "expected_document": "politica_privacidade.docx",
+    "expected_section": "Bases Legais",
+    "is_negative": false
+  },
+  {
+    "id": "q6",
+    "question": "Como o usuário pode solicitar a exclusão de seus dados?",
+    "expected_answer": "Enviando um e-mail para dpo@corporativo.com.",
+    "expected_document": "politica_privacidade.docx",
+    "expected_section": "Direitos dos Usuários",
+    "is_negative": false
+  },
+  {
+    "id": "q7",
+    "question": "O que deve ser feito se a senha corporativa expirar?",
+    "expected_answer": "Acessar o portal de autoatendimento para redefinir.",
+    "expected_document": "politica_seguranca.docx",
+    "expected_section": "Gestão de Acessos",
+    "is_negative": false
+  },
+  {
+    "id": "q8",
+    "question": "Qual é a complexidade mínima exigida para senhas?",
+    "expected_answer": "Mínimo 12 caracteres com letras maiúsculas, minúsculas, números e símbolos.",
+    "expected_document": "politica_seguranca.docx",
+    "expected_section": "Gestão de Acessos",
+    "is_negative": false
+  },
+  {
+    "id": "q9",
+    "question": "Como proceder se um dispositivo corporativo for roubado?",
+    "expected_answer": "Notificar a equipe de segurança da informação em até 2 horas.",
+    "expected_document": "politica_seguranca.docx",
+    "expected_section": "Incidentes",
+    "is_negative": false
+  },
+  {
+    "id": "q10",
+    "question": "Qual é a frequência de backup recomendada para dados críticos?",
+    "expected_answer": "Backup diário automatizado.",
+    "expected_document": "procedimento_backup.txt",
+    "expected_section": "Políticas de Backup",
+    "is_negative": false
+  },
+  {
+    "id": "q11",
+    "question": "Onde ficam armazenadas as mídias de backup físico?",
+    "expected_answer": "Em cofre corta-fogo fora do site principal.",
+    "expected_document": "procedimento_backup.txt",
+    "expected_section": "Armazenamento Físico",
+    "is_negative": false
+  },
+  {
+    "id": "q12",
+    "question": "Qual o tempo de retenção padrão para backups anuais?",
+    "expected_answer": "Retenção por 5 anos.",
+    "expected_document": "procedimento_backup.txt",
+    "expected_section": "Retenção",
+    "is_negative": false
+  },
+  {
+    "id": "q13",
+    "question": "Quem é o responsável por homologar o teste de restauração de backup?",
+    "expected_answer": "O Gerente de Infraestrutura.",
+    "expected_document": "procedimento_backup.txt",
+    "expected_section": "Homologação",
+    "is_negative": false
+  },
+  {
+    "id": "q14",
+    "question": "Qual é a voltagem de entrada recomendada para o estabilizador X?",
+    "expected_answer": "220V monofásico.",
+    "expected_document": "especificacao_estabilizador.xlsx",
+    "expected_section": "Entrada Elétrica",
+    "is_negative": false
+  },
+  {
+    "id": "q15",
+    "question": "Qual é o peso total do estabilizador modelo industrial?",
+    "expected_answer": "45 kg.",
+    "expected_document": "especificacao_estabilizador.xlsx",
+    "expected_section": "Dimensões Físicas",
+    "is_negative": false
+  },
+  {
+    "id": "q16",
+    "question": "Qual é o prazo padrão de garantia do estabilizador?",
+    "expected_answer": "24 meses contra defeitos de fabricação.",
+    "expected_document": "especificacao_estabilizador.xlsx",
+    "expected_section": "Garantia",
+    "is_negative": false
+  },
+  {
+    "id": "q17",
+    "question": "Qual o procedimento para solicitação de reembolso de viagens?",
+    "expected_answer": "Apresentar comprovantes fiscais no sistema em até 10 dias após o retorno.",
+    "expected_document": "politica_viagens.docx",
+    "expected_section": "Reembolso",
+    "is_negative": false
+  },
+  {
+    "id": "q18",
+    "question": "Qual é o valor limite para a diária de hotel em capitais?",
+    "expected_answer": "R$ 350,00 por dia.",
+    "expected_document": "politica_viagens.docx",
+    "expected_section": "Limites de Gastos",
+    "is_negative": false
+  },
+  {
+    "id": "q19",
+    "question": "Quem deve aprovar viagens internacionais?",
+    "expected_answer": "Diretor da área e CFO.",
+    "expected_document": "politica_viagens.docx",
+    "expected_section": "Aprovações",
+    "is_negative": false
+  },
+  {
+    "id": "q20",
+    "question": "Como funciona o reembolso para quilometragem rodada?",
+    "expected_answer": "R$ 1,20 por km rodado mediante relatório de rotas.",
+    "expected_document": "politica_viagens.docx",
+    "expected_section": "Reembolso",
+    "is_negative": false
+  },
+  {
+    "id": "q21",
+    "question": "Quais despesas são consideradas inelegíveis no reembolso de viagens?",
+    "expected_answer": "Bebidas alcoólicas, multas de trânsito e entretenimento.",
+    "expected_document": "politica_viagens.docx",
+    "expected_section": "Limites de Gastos",
+    "is_negative": false
+  },
+  {
+    "id": "q22",
+    "question": "Como proceder em caso de cancelamento de voo corporativo?",
+    "expected_answer": "Contatar a agência de viagens parceira pelo telefone de emergência.",
+    "expected_document": "politica_viagens.docx",
+    "expected_section": "Cancelamentos",
+    "is_negative": false
+  },
+  {
+    "id": "q23",
+    "question": "Quais são as regras para uso de táxi ou aplicativos de transporte?",
+    "expected_answer": "Permitido apenas para deslocamentos a trabalho limitados a R$ 80,00 por corrida.",
+    "expected_document": "politica_viagens.docx",
+    "expected_section": "Transporte",
+    "is_negative": false
+  },
+  {
+    "id": "q24",
+    "question": "Qual o canal oficial para denúncias de violações do código de conduta?",
+    "expected_answer": "Canal de ética pelo site corporativo ou telefone 0800-123-456.",
+    "expected_document": "codigo_conduta.docx",
+    "expected_section": "Canal de Ética",
+    "is_negative": false
+  },
+  {
+    "id": "q25",
+    "question": "Qual é a punição prevista para casos comprovados de assédio?",
+    "expected_answer": "Demissão por justa causa e encaminhamento às autoridades.",
+    "expected_document": "codigo_conduta.docx",
+    "expected_section": "Sanções",
+    "is_negative": false
+  },
+  {
+    "id": "q26",
+    "question": "Quem descobriu o Brasil em 1500?",
+    "expected_answer": "Não encontrado nos documentos.",
+    "expected_document": "",
+    "expected_section": "",
+    "is_negative": true
+  },
+  {
+    "id": "q27",
+    "question": "Qual a escalação campeã do time da Copa de 70?",
+    "expected_answer": "Não encontrado nos documentos.",
+    "expected_document": "",
+    "expected_section": "",
+    "is_negative": true
+  },
+  {
+    "id": "q28",
+    "question": "Como plantar batatas em casa de forma eficiente?",
+    "expected_answer": "Não encontrado nos documentos.",
+    "expected_document": "",
+    "expected_section": "",
+    "is_negative": true
+  },
+  {
+    "id": "q29",
+    "question": "Qual a distância exata entre a Terra e Marte?",
+    "expected_answer": "Não encontrado nos documentos.",
+    "expected_document": "",
+    "expected_section": "",
+    "is_negative": true
+  },
+  {
+    "id": "q30",
+    "question": "Quem inventou a lâmpada elétrica?",
+    "expected_answer": "Não encontrado nos documentos.",
+    "expected_document": "",
+    "expected_section": "",
+    "is_negative": true
+  }
+]

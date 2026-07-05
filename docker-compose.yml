@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # Task Queue Broker
+  redis:
+    image: redis:7-alpine
+    container_name: docurag_redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # FastAPI Web Application Gateway
+  api:
+    build: .
+    container_name: docurag_api
+    ports:
+      - "8000:8000"
+    volumes:
+      # Shared host folder is critical for sharing upload files, SQLite DB, and Qdrant index
+      - ./data:/app/data
+      # Mount host HuggingFace cache to prevent downloading 1.5GB of models inside the container
+      - C:/Users/micha/.cache/huggingface:/root/.cache/huggingface
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - REDIS_URL=redis://redis:6379/0
+      # host.docker.internal routes container network calls back to the host machine (LM Studio)
+      - LM_STUDIO_URL=http://host.docker.internal:1234/v1
+      - API_KEY=docurag_secret_api_key_v1
+      - LOG_LEVEL=INFO
+    extra_hosts:
+      # Ensures portability across OS gateways (Windows, Mac, Linux)
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  # Asynchronous Background Ingestion Task Worker
+  worker:
+    build: .
+    container_name: docurag_worker
+    command: python worker.py
+    volumes:
+      # Shares access to uploaded files and databases with the API service
+      - ./data:/app/data
+      # Mount host HuggingFace cache to prevent downloading 1.5GB of models inside the container
+      - C:/Users/micha/.cache/huggingface:/root/.cache/huggingface
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      # Routes container network calls back to the host machine (LM Studio)
+      - LM_STUDIO_URL=http://host.docker.internal:1234/v1
+      - API_KEY=docurag_secret_api_key_v1
+      - LOG_LEVEL=INFO
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy

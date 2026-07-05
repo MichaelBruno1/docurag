@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuRAG — Painel de Controle</title>
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="app-header">            
+            <div class="header-actions">
+                <div class="status-indicator">
+                    <span id="health-dot" class="dot offline"></span>
+                    <span id="health-text">Desconectado</span>
+                </div>
+                
+                <div class="api-key-container">
+                    <label for="api-key-input">Chave de API:</label>
+                    <input type="password" id="api-key-input" placeholder="Insira sua X-API-Key..." value="docurag_secret_api_key_v1">
+                    <button id="save-key-btn" class="btn btn-secondary">Salvar</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAIN LAYOUT GRID -->
+        <main class="main-grid">
+            <!-- COLUNA 1: INGESTÃO -->
+            <section class="grid-col card" id="ingestion-section">
+                <h2>📁 Ingestão de Documentos</h2>
+                <p class="section-desc">Envie arquivos PDF, Word (DOCX), Excel (XLSX) ou TXT para indexação assíncrona.</p>
+                
+                <div class="upload-zone" id="drop-zone">
+                    <span class="upload-icon">📤</span>
+                    <p>Arraste e solte o arquivo aqui ou</p>
+                    <label for="file-input" class="btn btn-primary file-label">Selecionar Arquivo</label>
+                    <input type="file" id="file-input" accept=".pdf,.docx,.xlsx,.txt,.csv" style="display: none;">
+                    <span id="selected-file-name" class="file-name">Nenhum arquivo selecionado</span>
+                </div>
+                
+                <button id="upload-btn" class="btn btn-success btn-full" disabled>Indexar Documento</button>
+
+                <div class="document-list-container">
+                    <h3>Últimos Envios</h3>
+                    <div class="table-wrapper">
+                        <table id="documents-table">
+                            <thead>
+                                <tr>
+                                    <th>Arquivo</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="documents-tbody">
+                                <tr>
+                                    <td colspan="3" class="empty-state">Nenhum documento processado nesta sessão.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- COLUNA 2: PLAYGROUND CHAT RAG -->
+            <section class="grid-col card col-double" id="chat-section">
+                <h2>💬 Playground de RAG Grounded</h2>
+                <p class="section-desc">Consulte a base de conhecimento estruturada com respostas validadas contra alucinações.</p>
+                
+                <div class="chat-container">
+                    <div class="chat-messages" id="chat-messages">
+                        <div class="message assistant">
+                            <div class="message-content">
+                                Olá! Digite uma pergunta para que eu possa recuperar o contexto estruturado e gerar uma resposta fundamentada nos documentos indexados.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-input-area">
+                        <input type="text" id="query-input" placeholder="Faça uma pergunta sobre a documentação indexada..." autocomplete="off">
+                        <button id="send-query-btn" class="btn btn-primary">Perguntar</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- COLUNA 3: STATS & BENCHMARK -->
+            <section class="grid-col card" id="stats-benchmark-section">
+                <!-- METRICAS DO SISTEMA -->
+                <div class="stats-panel">
+                    <h2>📊 Monitoramento da Fila</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <span class="stat-num" id="stat-active-docs">0</span>
+                            <span class="stat-label">Documentos</span>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-num" id="stat-queued-jobs">0</span>
+                            <span class="stat-label">Fila Redis</span>
+                        </div>
+                    </div>
+                    
+                    <div class="health-services">
+                        <div class="service-status">
+                            <span>Base SQLite:</span>
+                            <span id="service-sqlite" class="status-badge offline">Offline</span>
+                        </div>
+                        <div class="service-status">
+                            <span>Qdrant (Vetor):</span>
+                            <span id="service-qdrant" class="status-badge offline">Offline</span>
+                        </div>
+                        <div class="service-status">
+                            <span>Redis (Fila):</span>
+                            <span id="service-redis" class="status-badge offline">Offline</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr class="divider">
+
+                <!-- AVALIAÇÃO DE QUALIDADE (BENCHMARK) -->
+                <div class="benchmark-panel">
+                    <h2>🎯 Benchmark de Qualidade</h2>
+                    <p class="section-desc">Dispare testes automatizados de 30 perguntas factuais e negativas para calcular o Grounding.</p>
+                    
+                    <div class="benchmark-actions">
+                        <input type="text" id="benchmark-label-input" placeholder="Rótulo da config (ex: Busca Híbrida)" value="Busca Híbrida v1">
+                        <button id="run-benchmark-btn" class="btn btn-warning btn-full">Executar Teste Completo</button>
+                    </div>
+                    
+                    <div class="benchmark-loading" id="benchmark-loader" style="display: none;">
+                        <span class="spinner">⏳</span>
+                        <p>Rodando avaliação de 30 questões factuais/negativas no LLM. Isso pode levar de 30 a 60 segundos...</p>
+                    </div>
+
+                    <div class="benchmark-history-container">
+                        <h3>Histórico de Rodadas</h3>
+                        <div class="table-wrapper">
+                            <table id="benchmark-table">
+                                <thead>
+                                    <tr>
+                                        <th>Configuração</th>
+                                        <th>Hit Rate</th>
+                                        <th>Grounding</th>
+                                        <th>Admissão</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="benchmark-tbody">
+                                    <tr>
+                                        <td colspan="4" class="empty-state">Nenhum resultado obtido.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">Notificação</div>
+
+    <script src="app.js"></script>
+</body>
+</html>
