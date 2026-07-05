@@ -69,6 +69,41 @@ docurag/
 
 ---
 
+## ⚙️ Configuração do Ambiente (.env)
+
+A plataforma utiliza um arquivo `.env` na raiz do projeto para configurar variáveis de comportamento de API, modelos de inteligência artificial, filas e limiares de processamento. 
+
+Para configurar o seu ambiente, crie um arquivo chamado **`.env`** na raiz do projeto e preencha-o seguindo o modelo abaixo:
+
+```ini
+# --- API Settings ---
+API_KEY=docurag_secret_api_key_v1   # Chave de segurança exigida nas requisições HTTP (X-API-Key)
+LOG_LEVEL=INFO                      # Nível de granularidade de logs (DEBUG, INFO, WARNING, ERROR)
+PORT=8000                           # Porta exposta para acesso externo à API
+HOST=0.0.0.0                        # Endereço de vinculação de rede do servidor
+
+# --- External Services ---
+REDIS_URL=redis://localhost:6379/0  # URL de conexão ao broker Redis (em produção o compose sobrescreve para redis://redis:6379/0)
+
+# --- LLM Provider Settings (LM Studio) ---
+LM_STUDIO_URL=http://localhost:1234/v1               # Endpoint compatível com OpenAI da LLM executando no host
+LLM_MODEL_NAME=google/gemma-3-4b                     # Nome do modelo a ser consultado no LM Studio
+
+# --- Local AI Models (Embeddings & Rerank) ---
+EMBEDDING_MODEL_NAME=intfloat/multilingual-e5-base   # Modelo de embedding local
+RERANK_MODEL_NAME=BAAI/bge-reranker-base             # Modelo Cross-Encoder local de reordenação
+
+# --- Processing configs (Chunking) ---
+CHUNK_SIZE_TARGET=512   # Tamanho alvo em tokens para divisão semântica de chunks
+CHUNK_OVERLAP=64        # Quantidade de tokens sobrepostos entre chunks adjacentes
+
+# --- HuggingFace Cache Directory (Portabilidade) ---
+# Mapeia a pasta do seu host para evitar o download repetido de 1.5GB de pesos de modelo no contêiner
+HF_CACHE_DIR=C:/Users/seu_usuario/.cache/huggingface
+```
+
+---
+
 ## 🛠️ Instalação e Execução (Docker Compose)
 
 > [!IMPORTANT]
