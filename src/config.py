@@ -1,5 +1,19 @@
 import os
 
+# Custom lightweight dotenv loader to avoid external dependencies
+def _load_dotenv(path: str = ".env"):
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if "=" in line:
+                    key, val = line.split("=", 1)
+                    os.environ[key.strip()] = val.strip().strip("'\"")
+
+_load_dotenv()
+
 class Settings:
     # API Settings
     API_KEY: str = os.getenv("API_KEY", "docurag_secret_api_key_v1")

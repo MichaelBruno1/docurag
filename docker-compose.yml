@@ -31,8 +31,11 @@ services:
       - REDIS_URL=redis://redis:6379/0
       # host.docker.internal routes container network calls back to the host machine (LM Studio)
       - LM_STUDIO_URL=http://host.docker.internal:1234/v1
-      - API_KEY=docurag_secret_api_key_v1
-      - LOG_LEVEL=INFO
+      - API_KEY=${API_KEY:-docurag_secret_api_key_v1}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - LLM_MODEL_NAME=${LLM_MODEL_NAME:-google/gemma-3-4b}
+      - EMBEDDING_MODEL_NAME=${EMBEDDING_MODEL_NAME:-intfloat/multilingual-e5-base}
+      - RERANK_MODEL_NAME=${RERANK_MODEL_NAME:-BAAI/bge-reranker-base}
     extra_hosts:
       # Ensures portability across OS gateways (Windows, Mac, Linux)
       - "host.docker.internal:host-gateway"
@@ -55,8 +58,11 @@ services:
       - REDIS_URL=redis://redis:6379/0
       # Routes container network calls back to the host machine (LM Studio)
       - LM_STUDIO_URL=http://host.docker.internal:1234/v1
-      - API_KEY=docurag_secret_api_key_v1
-      - LOG_LEVEL=INFO
+      - API_KEY=${API_KEY:-docurag_secret_api_key_v1}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - LLM_MODEL_NAME=${LLM_MODEL_NAME:-google/gemma-3-4b}
+      - EMBEDDING_MODEL_NAME=${EMBEDDING_MODEL_NAME:-intfloat/multilingual-e5-base}
+      - RERANK_MODEL_NAME=${RERANK_MODEL_NAME:-BAAI/bge-reranker-base}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped

@@ -126,7 +126,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="DocuRAG Platform API",
     description="Plataforma de IA Generativa RAG Corporativa para Ingestão e Consulta Semântica Grounded de Documentos.",
-    version="1.1.0",
+    version="1.2.0",
     lifespan=lifespan
 )
 
