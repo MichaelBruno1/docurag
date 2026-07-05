@@ -17,7 +17,7 @@ class Settings:
     # External Services
     REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
     LM_STUDIO_URL: str = os.getenv("LM_STUDIO_URL", "http://localhost:1234/v1")
-    LLM_MODEL_NAME: str = os.getenv("LLM_MODEL_NAME", "qwen/qwen3.5-9b")
+    LLM_MODEL_NAME: str = os.getenv("LLM_MODEL_NAME", "google/gemma-3-4b")
     
     # AI Models
     EMBEDDING_MODEL_NAME: str = os.getenv("EMBEDDING_MODEL_NAME", "intfloat/multilingual-e5-base")

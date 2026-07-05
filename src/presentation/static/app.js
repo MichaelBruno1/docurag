@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Benchmark Elements
     const benchmarkLabelInput = document.getElementById("benchmark-label-input");
+    const benchmarkQuestionsInput = document.getElementById("benchmark-questions-input");
     const runBenchmarkBtn = document.getElementById("run-benchmark-btn");
     const benchmarkLoader = document.getElementById("benchmark-loader");
     const benchmarkTbody = document.getElementById("benchmark-tbody");
@@ -413,16 +414,24 @@ document.addEventListener("DOMContentLoaded", () => {
     // ----------------------------------------------------
     runBenchmarkBtn.addEventListener("click", async () => {
         const label = benchmarkLabelInput.value.trim() || "Padrão";
+        const numQuestions = benchmarkQuestionsInput.value.trim() || "30";
         
         // Block UI inputs
         runBenchmarkBtn.disabled = true;
         benchmarkLabelInput.disabled = true;
+        benchmarkQuestionsInput.disabled = true;
+        
+        // Update loader text dynamically
+        const loaderText = benchmarkLoader.querySelector("p");
+        if (loaderText) {
+            loaderText.textContent = `Rodando avaliação de ${numQuestions} questões factuais/negativas no LLM. Isso pode levar de 30 a 60 segundos...`;
+        }
         benchmarkLoader.style.display = "flex";
         
-        showToast("Executando teste comparativo de 30 perguntas. Por favor, aguarde...");
+        showToast(`Executando teste comparativo de ${numQuestions} perguntas. Por favor, aguarde...`);
         
         try {
-            const response = await fetch(`${API_URL}/benchmark/run?config_label=${encodeURIComponent(label)}`, {
+            const response = await fetch(`${API_URL}/benchmark/run?config_label=${encodeURIComponent(label)}&num_questions=${numQuestions}`, {
                 method: "POST",
                 headers: { "X-API-Key": API_KEY }
             });
@@ -448,6 +457,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } finally {
             runBenchmarkBtn.disabled = false;
             benchmarkLabelInput.disabled = false;
+            benchmarkQuestionsInput.disabled = false;
             benchmarkLoader.style.display = "none";
         }
     });

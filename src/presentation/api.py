@@ -9,7 +9,7 @@ from fastapi import FastAPI, Depends, HTTPException, Security, File, UploadFile,
 from fastapi.security.api_key import APIKeyHeader
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from redis import Redis
 from rq import Queue
 
@@ -29,8 +29,8 @@ logger = logging.getLogger("docurag_api")
 
 # Pydantic schemas
 class QueryRequest(BaseModel):
-    query: str
-    top_k: Optional[int] = 5
+    query: str = Field(..., min_length=3, max_length=500)
+    top_k: Optional[int] = Field(default=5, ge=1, le=15)
     filters: Optional[Dict[str, Any]] = None
 
 class QueryResponse(BaseModel):
@@ -126,7 +126,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="DocuRAG Platform API",
     description="Plataforma de IA Generativa RAG Corporativa para Ingestão e Consulta Semântica Grounded de Documentos.",
-    version="1.0.0",
+    version="1.1.0",
     lifespan=lifespan
 )
 
@@ -337,12 +337,13 @@ async def get_system_stats(
 @app.post("/benchmark/run")
 async def run_benchmark_endpoint(
     config_label: str = "Padrão",
+    num_questions: int = 30,
     api_key: str = Depends(get_api_key)
 ):
     if benchmark_runner is None:
         raise HTTPException(status_code=503, detail="Serviço de benchmark indisponível no momento.")
     try:
-        result = benchmark_runner.run_benchmark(config_label=config_label)
+        result = benchmark_runner.run_benchmark(config_label=config_label, num_questions=num_questions)
         return {
             "message": f"Benchmark para '{config_label}' executado com sucesso.",
             "timestamp": result["timestamp"],

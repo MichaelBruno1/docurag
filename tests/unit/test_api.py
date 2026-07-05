@@ -236,6 +236,12 @@ def test_benchmark_endpoints(mock_pipeline_dependencies):
         data = response.json()
         assert "TesteMock" in data["message"]
         assert data["average_metrics"]["retrieval"]["hit_rate"] == 0.9
+        mock_bench.run_benchmark.assert_called_with(config_label="TesteMock", num_questions=30)
+
+        # Run benchmark with custom num_questions
+        response = client.post("/benchmark/run?config_label=TesteMock&num_questions=15", headers={"X-API-Key": API_KEY})
+        assert response.status_code == 200
+        mock_bench.run_benchmark.assert_called_with(config_label="TesteMock", num_questions=15)
         
         # Get benchmark results history (file doesn't exist yet)
         with patch("os.path.exists", return_value=False):
@@ -255,3 +261,31 @@ def test_benchmark_endpoints(mock_pipeline_dependencies):
             assert response.status_code == 200
             assert len(response.json()) == 1
             assert response.json()[0]["config_label"] == "TesteMock"
+
+
+def test_query_rag_boundary_validations(mock_pipeline_dependencies):
+    with TestClient(app) as client:
+        # Query too short (less than 3 characters)
+        response = client.post(
+            "/query",
+            json={"query": "Oi", "top_k": 3},
+            headers={"X-API-Key": API_KEY}
+        )
+        assert response.status_code == 422
+        
+        # top_k too large (greater than 15)
+        response = client.post(
+            "/query",
+            json={"query": "Como ligar o motor?", "top_k": 20},
+            headers={"X-API-Key": API_KEY}
+        )
+        assert response.status_code == 422
+
+        # top_k too small (less than 1)
+        response = client.post(
+            "/query",
+            json={"query": "Como ligar o motor?", "top_k": 0},
+            headers={"X-API-Key": API_KEY}
+        )
+        assert response.status_code == 422
+

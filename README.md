@@ -72,8 +72,9 @@ docurag/
 ## 🛠️ Instalação e Execução (Docker Compose)
 
 > [!IMPORTANT]
-> **Aceleração para GPU AMD/Nvidia**: 
-> A configuração do Docker monta o cache do HuggingFace do host (`C:\Users\micha\.cache\huggingface`) no contêiner para acelerar a inicialização. Certifique-se de que o diretório existe ou altere a propriedade no `docker-compose.yml` para corresponder ao seu usuário do Windows/Linux.
+> **Aceleração e Cache de Modelos HuggingFace**: 
+> A configuração do Docker monta o cache do HuggingFace no contêiner. Por padrão, é criado o diretório local `.hf_cache` na raiz do projeto para persistir os pesos dos modelos.
+> Se desejar reutilizar o cache global da sua máquina para evitar novos downloads, defina a variável de ambiente `HF_CACHE_DIR` antes de iniciar os contêineres (ex: no Windows PowerShell: `$env:HF_CACHE_DIR="C:/Users/seu_usuario/.cache/huggingface"` ou criando um arquivo `.env` com `HF_CACHE_DIR=C:/Users/seu_usuario/.cache/huggingface`).
 
 ### 1. Iniciar toda a pilha RAG:
 Na pasta raiz do projeto, execute:

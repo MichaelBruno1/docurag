@@ -24,7 +24,7 @@ services:
       # Shared host folder is critical for sharing upload files, SQLite DB, and Qdrant index
       - ./data:/app/data
       # Mount host HuggingFace cache to prevent downloading 1.5GB of models inside the container
-      - C:/Users/micha/.cache/huggingface:/root/.cache/huggingface
+      - ${HF_CACHE_DIR:-./.hf_cache}:/root/.cache/huggingface
     environment:
       - HOST=0.0.0.0
       - PORT=8000
@@ -50,7 +50,7 @@ services:
       # Shares access to uploaded files and databases with the API service
       - ./data:/app/data
       # Mount host HuggingFace cache to prevent downloading 1.5GB of models inside the container
-      - C:/Users/micha/.cache/huggingface:/root/.cache/huggingface
+      - ${HF_CACHE_DIR:-./.hf_cache}:/root/.cache/huggingface
     environment:
       - REDIS_URL=redis://redis:6379/0
       # Routes container network calls back to the host machine (LM Studio)

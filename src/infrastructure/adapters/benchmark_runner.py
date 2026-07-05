@@ -39,8 +39,8 @@ class AutomatedBenchmarkRunner(BenchmarkRunner):
         self.history_path = history_path or "data/benchmark_history.json"
         self.report_path = report_path or "data/benchmark_report.md"
 
-    def run_benchmark(self, config_label: str = "Padrão") -> Dict[str, Any]:
-        logger.info(f"Iniciando execução do Benchmark para a configuração: {config_label}")
+    def run_benchmark(self, config_label: str = "Padrão", num_questions: int = 30) -> Dict[str, Any]:
+        logger.info(f"Iniciando execução do Benchmark para a configuração: {config_label} (Limiar de perguntas: {num_questions})")
         
         # 1. Load Golden Set
         if not os.path.exists(self.golden_set_path):
@@ -49,6 +49,9 @@ class AutomatedBenchmarkRunner(BenchmarkRunner):
             
         with open(self.golden_set_path, "r", encoding="utf-8") as f:
             golden_questions = json.load(f)
+            
+        if num_questions > 0:
+            golden_questions = golden_questions[:num_questions]
             
         logger.info(f"Carregadas {len(golden_questions)} perguntas de referência.")
         

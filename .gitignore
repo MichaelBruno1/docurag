@@ -156,3 +156,6 @@ Thumbs.db
 # DocuRAG Runtime Data Directory
 # Persists local vector databases, SQLite tables, original uploads, and logs.
 data/
+
+# HuggingFace Models Cache (Default fallback path)
+.hf_cache/
